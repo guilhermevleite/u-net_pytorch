@@ -1,6 +1,6 @@
 import torch
 import torchvision
-from drive.MyDrive.libs.unet.dataset import CarvanaDataset
+from dataset import CarvanaDataset
 from torch.utils.data import DataLoader
 
 

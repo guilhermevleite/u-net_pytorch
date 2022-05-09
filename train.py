@@ -4,9 +4,9 @@ import torch.optim as optim
 import matplotlib.pyplot as plt
 from tqdm import tqdm
 import cv2
-from drive.MyDrive.libs.unet.model import UNET
-import drive.MyDrive.libs.unet.utils as Utils
-from drive.MyDrive.libs.unet.dataset import CarvanaDataset
+from model import UNET
+import utils as Utils
+from dataset import CarvanaDataset
 import albumentations as A
 # !pip install --upgrade --force-reinstall --no-deps albumentations
 from albumentations.pytorch.transforms import ToTensorV2

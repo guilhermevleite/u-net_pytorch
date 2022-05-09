@@ -13,6 +13,38 @@
 #     name: python3
 # ---
 
+# # Github stuff
+
+# ## Clone
+# +
+!git clone https://github.com/guilhermevleite/u-net_pytorch unet
+%cd unet
+# -
+
+# ## Pull
+# +
+!git pull
+# -
+
+# ## Commit changes
+# +
+!git add . 
+!git commit -m 'changes made in colab'
+!git push
+# -
+
+# # Requirements
+
+# +
+# Install albumentations, with qudida
+# TODO: Find a way to not use albumentations at all
+!pip install -U albumentations --no-binary qudida,albumentations
+
+# IF cv2 is not working:
+!pip uninstall opencv-python-headless==4.5.5.64
+!pip install opencv-python-headless==4.5.2.52
+# -
+
 # # U-Net
 
 from google.colab import drive

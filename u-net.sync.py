@@ -13,18 +13,38 @@
 #     name: python3
 # ---
 
-# # Go  
-# So this should be a small text inside the cell
+# # U-Net
 
-# # Not go
-# How this works, **bold**
+from google.colab import drive
+drive.mount('/content/drive')
 
-print('hello')
-def main():
-    crap = 'crap'
+# +
+import torch
+import drive.MyDrive.segmentation.unet.lib.train as Train
 
 
-if 1 == 2:
-    print('dang')
-else:
-    print('dong')
+class Spheroid():
+
+    def __init__(self):
+        learning_rate = 1e-4
+        batch_size = 32
+        num_epochs = 5
+        num_workers = 2
+        image_width = 240
+        image_height = 160
+        pin_memory = True
+        load_model = False
+
+        train_img_dir = '/content/drive/MyDrive/db/segmentation/FL5C/train/images/'
+        train_mask_dir = '/content/drive/MyDrive/db/segmentation/FL5C/train/masks/'
+        val_img_dir = '/content/drive/MyDrive/db/segmentation/FL5C/val/images/'
+        val_mask_dir = '/content/drive/MyDrive/db/segmentation/FL5C/val/masks/'
+
+        device = 'cuda' if torch.cuda.is_available() else 'cpu'
+
+
+    def main():
+        data_loader, trained_model = Train.main()
+# -
+
+Spheroid.main()

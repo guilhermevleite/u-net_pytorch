@@ -16,22 +16,19 @@
 # # Github stuff
 
 # ## Clone
-# +
+
 !git clone https://github.com/guilhermevleite/u-net_pytorch unet
 %cd unet
-# -
 
 # ## Pull
-# +
+
 !git pull
-# -
 
 # ## Commit changes
-# +
+
 !git add . 
 !git commit -m 'changes made in colab'
 !git push
-# -
 
 # # Requirements
 
@@ -52,7 +49,7 @@ drive.mount('/content/drive')
 
 # +
 import torch
-import drive.MyDrive.segmentation.unet.lib.train as Train
+import train as Train
 
 
 class Spheroid():
@@ -80,3 +77,5 @@ class Spheroid():
 # -
 
 Spheroid.main()
+
+

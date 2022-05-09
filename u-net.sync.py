@@ -13,4 +13,18 @@
 #     name: python3
 # ---
 
+# # Go  
+# So this should be a small text inside the cell
 
+# # Not go
+# How this works, **bold**
+
+print('hello')
+def main():
+    crap = 'crap'
+
+
+if 1 == 2:
+    print('dang')
+else:
+    print('dong')

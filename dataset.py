@@ -13,6 +13,8 @@ class CarvanaDataset(Dataset):
         self.transform = transform
         self.images = os.listdir(image_dir)
 
+        print(self.__len__(), 'files found')
+
     def __len__(self):
         return len(self.images)
 

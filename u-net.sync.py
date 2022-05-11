@@ -17,31 +17,31 @@
 
 # ## Clone
 
-!git clone https://github.com/guilhermevleite/u-net_pytorch unet
-%cd /content/unet
+# !git clone https://github.com/guilhermevleite/u-net_pytorch unet
+# %cd /content/unet
 
 # ## Pull
 
-%cd /content/unet
-!git pull
+# %cd /content/unet
+# !git pull
 
 # ## Commit changes
 
-!git add . 
-!git commit -m 'changes made in colab'
-!git push
+# !git add . 
+# !git commit -m 'changes made in colab'
+# !git push
 
 # # Requirements
 
 # +
 # Install albumentations, with qudida
 # TODO: Find a way to not use albumentations at all
-!pip install --upgrade --force-reinstall --no-deps qudida==0.0.4
-!pip install --upgrade --force-reinstall --no-deps albumentations==1.1.0
+# !pip install --upgrade --force-reinstall --no-deps qudida==0.0.4
+# !pip install --upgrade --force-reinstall --no-deps albumentations==1.1.0
 
 # IF cv2 is not working:
-!pip uninstall --yes opencv-python-headless==4.5.5.64
-!pip install opencv-python-headless==4.5.2.52
+# !pip uninstall --yes opencv-python-headless==4.5.5.64
+# !pip install opencv-python-headless==4.5.2.52
 # -
 
 # # U-Net
@@ -79,7 +79,7 @@ unet_train = Train.Train(
         train_maskdir=train_maskdir,
         val_dir=val_dir,
         val_maskdir=val_maskdir,
-        batch_size=32,
+        batch_size=2,
         n_epochs=5,
         n_workers=2,
         learning_rate=1e-4,

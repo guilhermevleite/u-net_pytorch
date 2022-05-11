@@ -189,21 +189,18 @@ class Train():
         last_loss = 0.0
 
         for i, data in enumerate(self.train_loader):
+            print('Train One Epoch, train_loader index:', i)
             inputs, labels = data
 
             # TODO: This needs to be revised, it was done to fix the input shape into the expected one
             inputs = inputs.permute(0, 3, 1, 2)
             labels = labels.unsqueeze(1)
 
-            # TODO: Review this. Converting from Float into Byte, because there was an error.
-            inputs = inputs.byte()
-            labels = labels.byte()
-            
-            print('train one epoch')
-            print('inputs shape {} and labels shape {}'.format(inputs.shape, labels.shape))
+            inputs = inputs.float()
+            labels = labels.float() # Just making sure
+
             self.optimizer.zero_grad()
             outputs = self.model(inputs)
-
             loss = self.loss_fn(outputs, labels)
             loss.backward()
             self.optimizer.step()

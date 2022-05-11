@@ -17,30 +17,31 @@
 
 # ## Clone
 
-# !git clone https://github.com/guilhermevleite/u-net_pytorch unet
-# %cd unet
+!git clone https://github.com/guilhermevleite/u-net_pytorch unet
+%cd /content/unet
 
 # ## Pull
 
-# !git pull
+%cd /content/unet
+!git pull
 
 # ## Commit changes
 
-# !git add . 
-# !git commit -m 'changes made in colab'
-# !git push
+!git add . 
+!git commit -m 'changes made in colab'
+!git push
 
 # # Requirements
 
 # +
 # Install albumentations, with qudida
 # TODO: Find a way to not use albumentations at all
-# !pip install --upgrade --force-reinstall --no-deps qudida==0.0.4
-# !pip install --upgrade --force-reinstall --no-deps albumentations==1.1.0
+!pip install --upgrade --force-reinstall --no-deps qudida==0.0.4
+!pip install --upgrade --force-reinstall --no-deps albumentations==1.1.0
 
 # IF cv2 is not working:
-# !pip uninstall opencv-python-headless==4.5.5.64
-# !pip install opencv-python-headless==4.5.2.52
+!pip uninstall --yes opencv-python-headless==4.5.5.64
+!pip install opencv-python-headless==4.5.2.52
 # -
 
 # # U-Net
@@ -54,15 +55,20 @@ import torch.nn as nn
 import train as Train
 from model import UNET
 
+local = True
+path_suffix = None
 
-# train_dir = "/content/drive/MyDrive/db/segmentation/FL5C/train/images/"
-train_dir = '/home/leite/Drive/db/segmentation/FL5C/train/images/'
-# train_maskdir = "/content/drive/MyDrive/db/segmentation/FL5C/train/masks/"
-train_maskdir = '/home/leite/Drive/db/segmentation/FL5C/train/masks/'
-# val_dir = "/content/drive/MyDrive/db/segmentation/FL5C/val/images/"
-val_dir = '/home/leite/Drive/db/segmentation/FL5C/val/images/'
-# val_maskdir = "/content/drive/MyDrive/db/segmentation/FL5C/val/masks/"
-val_maskdir = '/home/leite/Drive/db/segmentation/FL5C/val/masks/'
+if local:
+    path_suffix = '/home/leite/Drive/'
+else:
+    path_suffix = '/content/drive/MyDrive/'
+
+print('Suffix:', path_suffix)
+
+train_dir = path_suffix + 'db/segmentation/FL5C/train/images/'
+train_maskdir = path_suffix + 'db/segmentation/FL5C/train/masks/'
+val_dir = path_suffix + 'db/segmentation/FL5C/val/images/'
+val_maskdir = path_suffix + 'db/segmentation/FL5C/val/masks/'
 
 l_func = nn.BCEWithLogitsLoss()
 
@@ -87,11 +93,7 @@ unet_train = Train.Train(
 print('Training U-Net...')
 unet_train.training()
 # -
-
-# +
 print('Done Training.')
 print('Haha')
-# -
 
-# +
-# -
+

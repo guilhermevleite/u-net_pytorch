@@ -1,15 +1,19 @@
-import torch
-import torch.nn as nn
-import torch.optim as optim
-import matplotlib.pyplot as plt
-from tqdm import tqdm
-import cv2
-from model import UNET
-import utils as Utils
-from dataset import CarvanaDataset
-import albumentations as A
+# import torch.nn as nn
+# import torch.optim as optim
+# from tqdm import tqdm
+# from model import UNET
+# import utils as Utils
+# from dataset import CarvanaDataset
+# import albumentations as A
 # !pip install --upgrade --force-reinstall --no-deps albumentations
-from albumentations.pytorch.transforms import ToTensorV2
+# from albumentations.pytorch.transforms import ToTensorV2
+
+# New Imports
+import torch
+import torch.optim as optim
+import torchvision.transforms as transforms
+from datetime import datetime
+import utils as Utils
 
 
 LEARNING_RATE = 1e-4
@@ -135,3 +139,100 @@ def main():
     
     return (train_loader, model)
     # plot_predictions(val_loader, model, DEVICE)
+
+class Train():
+
+    def __init__(self, train_dir, train_maskdir, val_dir, val_maskdir, batch_size, n_epochs, n_workers, learning_rate, img_height, img_width, device, model, loss_fn):
+        self.train_dir = train_dir,
+        self.train_maskdir = train_maskdir,
+        self.val_dir = val_dir,
+        self.val_maskdir = val_maskdir,
+        self.batch_size = batch_size,
+        self.n_epochs = n_epochs,
+        self.n_workers = n_workers,
+        self.learning_rate = learning_rate
+        self.img_height = img_height
+        self.img_width = img_width
+        self.device = device
+        self.model = model.to(device=self.device)
+        self.loss_fn = loss_fn
+        self.optimizer = optim.Adam(
+                self.model.parameters(),
+                lr=self.learning_rate
+                )
+
+        # TODO: If needed change Normalize mean to 0.0, and std to 1.0
+        self.transform = transforms.Compose([
+            transforms.ToTensor(),
+            transforms.Normalize(
+                (0.5, 0.5, 0.5),
+                (0.5, 0.5, 0.5)),
+            transforms.Resize((
+                self.img_height,
+                self.img_width))
+            ])
+
+        self.train_loader, self.v_loader = Utils.get_loaders(
+                train_dir=self.train_dir,
+                train_maskdir=self.train_maskdir,
+                val_dir=self.val_dir,
+                val_maskdir=self.val_maskdir,
+                batch_size=self.batch_size,
+                train_transform=self.transform,
+                val_transform=self.transform,
+                num_workers=self.n_workers,
+                pin_memory=True)
+
+
+    def train_one_epoch(self, epoch_index):
+        running_loss = 0.0
+        last_loss = 0.0
+
+        for i, data in enumerate(self.train_loader):
+            inputs, labels = data
+            self.optimizer.zero_grad()
+            outputs = self.model(inputs)
+
+            loss = self.loss_fn(outputs, labels)
+            loss.backward()
+            self.optimizer.step()
+
+            running_loss += loss.item()
+            if i%1000 == 999:
+                last_loss = running_loss/1000
+                print('\tBatch {} Loss: {}'.format(i+1, last_loss))
+                running_loss = 0.0
+
+        return last_loss
+
+
+    def traning(self):
+        timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+        epoch_number = 0
+        best_vloss = 1_000_000.0
+
+        for epoch in range(self.n_epochs):
+            print('Epoch:', epoch+1)
+
+            self.model.train(True)
+            avg_loss = self.train_one_epoch(epoch_number)
+            self.model.train(False)
+
+            running_vloss = 0.0
+            i = 0
+            for i,v_data in enumerate(self.v_loader):
+                v_inputs, v_labels = v_data
+                v_outputs = self.model(v_inputs)
+                v_loss = self.loss_fn(v_outputs, v_labels)
+
+                running_vloss += v_loss
+
+            avg_vloss = running_vloss / (i+1)
+            print('Loss Train: {}\t Validation: {}'.format(avg_loss, avg_vloss))
+
+            if avg_vloss < best_vloss:
+                best_vloss = avg_vloss
+                model_path = 'model_{}_{}'.format(timestamp, epoch_number)
+                torch.save(self.model.state_dict(), model_path)
+
+            epoch_number += 1

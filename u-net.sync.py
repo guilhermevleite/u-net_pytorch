@@ -17,29 +17,30 @@
 
 # ## Clone
 
-!git clone https://github.com/guilhermevleite/u-net_pytorch unet
-%cd unet
+# !git clone https://github.com/guilhermevleite/u-net_pytorch unet
+# %cd unet
 
 # ## Pull
 
-!git pull
+# !git pull
 
 # ## Commit changes
 
-!git add . 
-!git commit -m 'changes made in colab'
-!git push
+# !git add . 
+# !git commit -m 'changes made in colab'
+# !git push
 
 # # Requirements
 
 # +
 # Install albumentations, with qudida
 # TODO: Find a way to not use albumentations at all
-!pip install -U albumentations --no-binary qudida,albumentations
+# !pip install --upgrade --force-reinstall --no-deps qudida==0.0.4
+# !pip install --upgrade --force-reinstall --no-deps albumentations==1.1.0
 
 # IF cv2 is not working:
-!pip uninstall opencv-python-headless==4.5.5.64
-!pip install opencv-python-headless==4.5.2.52
+# !pip uninstall opencv-python-headless==4.5.5.64
+# !pip install opencv-python-headless==4.5.2.52
 # -
 
 # # U-Net
@@ -49,33 +50,37 @@ drive.mount('/content/drive')
 
 # +
 import torch
+import torch.nn as nn
 import train as Train
+from model import UNET
 
 
-class Spheroid():
-
-    def __init__(self):
-        learning_rate = 1e-4
-        batch_size = 32
-        num_epochs = 5
-        num_workers = 2
-        image_width = 240
-        image_height = 160
-        pin_memory = True
-        load_model = False
-
-        train_img_dir = '/content/drive/MyDrive/db/segmentation/FL5C/train/images/'
-        train_mask_dir = '/content/drive/MyDrive/db/segmentation/FL5C/train/masks/'
-        val_img_dir = '/content/drive/MyDrive/db/segmentation/FL5C/val/images/'
-        val_mask_dir = '/content/drive/MyDrive/db/segmentation/FL5C/val/masks/'
-
-        device = 'cuda' if torch.cuda.is_available() else 'cpu'
+# train_dir = "/content/drive/MyDrive/DB/FL5C/train/images/"
+train_dir = '/home/leite/Drive/db/segmentation/FL5C/train/images/'
+# train_maskdir = "/content/drive/MyDrive/DB/FL5C/train/masks/"
+train_maskdir = '/home/leite/Drive/db/segmentation/FL5C/train/masks/'
+# val_dir = "/content/drive/MyDrive/DB/FL5C/val/images/"
+val_dir = '/home/leite/Drive/db/segmentation/FL5C/val/images/'
+# val_maskdir = "/content/drive/MyDrive/DB/FL5C/val/masks/"
+val_maskdir = '/home/leite/Drive/db/segmentation/FL5C/val/masks/'
 
 
-    def main():
-        data_loader, trained_model = Train.main()
-# -
 
-Spheroid.main()
+# TODO: Define optimizer out here
+unet_train = Train(
+        train_dir=train_dir,
+        train_maskdir=train_maskdir,
+        val_dir=val_dir,
+        val_maskdir=val_maskdir,
+        batch_size=32,
+        n_epochs=5,
+        n_workers=2,
+        learning_rate=1e-4,
+        img_height=160,
+        img_width=240,
+        device='cuda' if torch.cuda.is_available() else 'cpu',
+        model=UNET(in_channels=3, out_channels=1),
+        loss_fn=nn.BCEWithLogitsLoss()
+        )
 
-
+unet_train.training()

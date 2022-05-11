@@ -196,8 +196,8 @@ class Train():
             inputs = inputs.permute(0, 3, 1, 2)
             labels = labels.unsqueeze(1)
 
-            inputs = inputs.float()
-            labels = labels.float() # Just making sure
+            inputs = inputs.float().to(self.device)
+            labels = labels.float().to(self.device) # Just making sure
 
             self.optimizer.zero_grad()
             outputs = self.model(inputs)

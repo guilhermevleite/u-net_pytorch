@@ -90,7 +90,7 @@ unet_train = Train.Train(
         loss_fn=l_func
         )
 
-print('Training U-Net...')
+print('Training U-Net... with', unet_train.device)
 unet_train.training()
 # -
 print('Done Training.')

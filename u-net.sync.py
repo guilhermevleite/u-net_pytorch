@@ -64,10 +64,11 @@ val_dir = '/home/leite/Drive/db/segmentation/FL5C/val/images/'
 # val_maskdir = "/content/drive/MyDrive/DB/FL5C/val/masks/"
 val_maskdir = '/home/leite/Drive/db/segmentation/FL5C/val/masks/'
 
+l_func = nn.BCEWithLogitsLoss()
 
-
+print('Hello!')
 # TODO: Define optimizer out here
-unet_train = Train(
+unet_train = Train.Train(
         train_dir=train_dir,
         train_maskdir=train_maskdir,
         val_dir=val_dir,
@@ -80,7 +81,9 @@ unet_train = Train(
         img_width=240,
         device='cuda' if torch.cuda.is_available() else 'cpu',
         model=UNET(in_channels=3, out_channels=1),
-        loss_fn=nn.BCEWithLogitsLoss()
+        loss_fn=l_func
         )
+
+print(type(unet_train))
 
 unet_train.training()

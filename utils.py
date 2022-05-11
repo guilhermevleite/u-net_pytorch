@@ -24,6 +24,7 @@ def get_loaders(
     num_workers=4,
     pin_memory=True
 ):
+    print('Train dir:', type(train_dir))
     train_ds = CarvanaDataset(
         image_dir=train_dir,
         mask_dir=train_maskdir,

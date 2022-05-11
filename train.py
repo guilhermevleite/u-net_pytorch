@@ -143,13 +143,15 @@ def main():
 class Train():
 
     def __init__(self, train_dir, train_maskdir, val_dir, val_maskdir, batch_size, n_epochs, n_workers, learning_rate, img_height, img_width, device, model, loss_fn):
-        self.train_dir = train_dir,
-        self.train_maskdir = train_maskdir,
-        self.val_dir = val_dir,
-        self.val_maskdir = val_maskdir,
-        self.batch_size = batch_size,
-        self.n_epochs = n_epochs,
-        self.n_workers = n_workers,
+        self.train_dir = train_dir
+        print('constructor:', type(train_dir))
+        print('self constructor:', type(self.train_dir))
+        self.train_maskdir = train_maskdir
+        self.val_dir = val_dir
+        self.val_maskdir = val_maskdir
+        self.batch_size = batch_size
+        self.n_epochs = n_epochs
+        self.n_workers = n_workers
         self.learning_rate = learning_rate
         self.img_height = img_height
         self.img_width = img_width
@@ -206,12 +208,14 @@ class Train():
         return last_loss
 
 
-    def traning(self):
+    def training(self):
         timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
         epoch_number = 0
         best_vloss = 1_000_000.0
 
-        for epoch in range(self.n_epochs):
+        ep = int(self.n_epochs)
+
+        for epoch in range(ep):
             print('Epoch:', epoch+1)
 
             self.model.train(True)

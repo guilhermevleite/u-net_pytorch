@@ -190,6 +190,10 @@ class Train():
 
         for i, data in enumerate(self.train_loader):
             inputs, labels = data
+
+            inputs = inputs.permute(0, 3, 1, 2)
+            labels = labels.unsqueeze(1)
+
             print('train one epoch')
             print('inputs shape {} and labels shape {}'.format(inputs.shape, labels.shape))
             self.optimizer.zero_grad()

@@ -27,11 +27,11 @@ class CarvanaDataset(Dataset):
         mask[mask == 255.0] = 1.0
 
         # Applying data augmentations
-        if self.transform is not None:
-            augmentations = self.transform(image=image, mask=mask)
-            # Getting the images back from the dictionary
-            image = augmentations["image"]
-            mask = augmentations["mask"]
+        # if self.transform is not None:
+            # augmentations = self.transform
+            # # Getting the images back from the dictionary
+            # image = augmentations["image"]
+            # mask = augmentations["mask"]
         
         # print('DEBUG:', self.images[index], image.shape, mask.shape)
         return image, mask

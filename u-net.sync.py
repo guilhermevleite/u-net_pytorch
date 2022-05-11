@@ -55,13 +55,13 @@ import train as Train
 from model import UNET
 
 
-# train_dir = "/content/drive/MyDrive/DB/FL5C/train/images/"
+# train_dir = "/content/drive/MyDrive/db/FL5C/train/images/"
 train_dir = '/home/leite/Drive/db/segmentation/FL5C/train/images/'
-# train_maskdir = "/content/drive/MyDrive/DB/FL5C/train/masks/"
+# train_maskdir = "/content/drive/MyDrive/db/FL5C/train/masks/"
 train_maskdir = '/home/leite/Drive/db/segmentation/FL5C/train/masks/'
-# val_dir = "/content/drive/MyDrive/DB/FL5C/val/images/"
+# val_dir = "/content/drive/MyDrive/db/FL5C/val/images/"
 val_dir = '/home/leite/Drive/db/segmentation/FL5C/val/images/'
-# val_maskdir = "/content/drive/MyDrive/DB/FL5C/val/masks/"
+# val_maskdir = "/content/drive/MyDrive/db/FL5C/val/masks/"
 val_maskdir = '/home/leite/Drive/db/segmentation/FL5C/val/masks/'
 
 l_func = nn.BCEWithLogitsLoss()
@@ -87,3 +87,8 @@ unet_train = Train.Train(
 print(type(unet_train))
 
 unet_train.training()
+# -
+print('Done This')
+
+
+

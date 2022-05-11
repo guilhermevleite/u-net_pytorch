@@ -144,8 +144,6 @@ class Train():
 
     def __init__(self, train_dir, train_maskdir, val_dir, val_maskdir, batch_size, n_epochs, n_workers, learning_rate, img_height, img_width, device, model, loss_fn):
         self.train_dir = train_dir
-        print('constructor:', type(train_dir))
-        print('self constructor:', type(self.train_dir))
         self.train_maskdir = train_maskdir
         self.val_dir = val_dir
         self.val_maskdir = val_maskdir
@@ -192,6 +190,8 @@ class Train():
 
         for i, data in enumerate(self.train_loader):
             inputs, labels = data
+            print('train one epoch')
+            print('inputs shape {} and labels shape {}'.format(inputs.shape, labels.shape))
             self.optimizer.zero_grad()
             outputs = self.model(inputs)
 

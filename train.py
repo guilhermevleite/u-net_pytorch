@@ -189,7 +189,7 @@ class Train():
         last_loss = 0.0
 
         for i, data in enumerate(self.train_loader):
-            print('Train One Epoch, train_loader index:', i)
+            #print('Train One Epoch, train_loader index:', i, len(self.train_loader))
             inputs, labels = data
 
             # TODO: This needs to be revised, it was done to fix the input shape into the expected one
@@ -206,10 +206,16 @@ class Train():
             self.optimizer.step()
 
             running_loss += loss.item()
-            if i%1000 == 999:
+            if i%10 == 9:
                 last_loss = running_loss/1000
                 print('\tBatch {} Loss: {}'.format(i+1, last_loss))
                 running_loss = 0.0
+
+            print('1.', torch.cuda.memory_allocated()/1_024_000_000.)
+            del(inputs)
+            del(labels)
+            torch.cuda.empty_cache()
+            print('2.', torch.cuda.memory_allocated()/1_024_000_000.)
 
         return last_loss
 
@@ -232,11 +238,31 @@ class Train():
             i = 0
             for i,v_data in enumerate(self.v_loader):
                 v_inputs, v_labels = v_data
+
+                print('Before dataloader:', torch.cuda.memory_allocated()/1_024_000_000.)
+                v_inputs = v_inputs.permute(0, 3, 1, 2).float()
+                v_labels = v_labels.unsqueeze(1).float()
+                print('After dataloader:', torch.cuda.memory_allocated()/1_024_000_000.)
+
+                print('Getting predictions')
+                torch.cuda.empty_cache()
+                print('Before model:', torch.cuda.memory_allocated()/1_024_000_000.)
+                self.model.to('cpu')
                 v_outputs = self.model(v_inputs)
+                self.model.to(self.device)
+                print('After model:', torch.cuda.memory_allocated()/1_024_000_000.)
+                print('Calculating Loss')
                 v_loss = self.loss_fn(v_outputs, v_labels)
+
+                print('3.', torch.cuda.memory_allocated()/1_024_000_000.)
+                del(v_inputs)
+                del(v_labels)
+                torch.cuda.empty_cache()
+                print('4.', torch.cuda.memory_allocated()/1_024_000_000.)
 
                 running_vloss += v_loss
 
+            print('Calculating, average loss')
             avg_vloss = running_vloss / (i+1)
             print('Loss Train: {}\t Validation: {}'.format(avg_loss, avg_vloss))
 

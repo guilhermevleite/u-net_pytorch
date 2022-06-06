@@ -200,8 +200,9 @@ class Train():
             labels = labels.float().to(self.device) # Just making sure
 
             self.optimizer.zero_grad()
-            outputs = self.model(inputs)
-            loss = self.loss_fn(outputs, labels)
+            with torch.cuda.amp.autocast():
+              outputs = self.model(inputs)
+              loss = self.loss_fn(outputs, labels)
             loss.backward()
             self.optimizer.step()
 
@@ -247,12 +248,10 @@ class Train():
                 print('Getting predictions')
                 torch.cuda.empty_cache()
                 print('Before model:', torch.cuda.memory_allocated()/1_024_000_000.)
-                self.model.to('cpu')
-                v_outputs = self.model(v_inputs)
-                self.model.to(self.device)
+                with torch.cuda.amp.autocast():
+                  v_outputs = self.model(v_inputs)
+                  v_loss = self.loss_fn(v_outputs, v_labels)
                 print('After model:', torch.cuda.memory_allocated()/1_024_000_000.)
-                print('Calculating Loss')
-                v_loss = self.loss_fn(v_outputs, v_labels)
 
                 print('3.', torch.cuda.memory_allocated()/1_024_000_000.)
                 del(v_inputs)

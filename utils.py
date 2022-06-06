@@ -4,6 +4,13 @@ from dataset import CarvanaDataset
 from torch.utils.data import DataLoader
 
 
+def get_gpu_mem(index=0):
+  r = torch.cuda.memory_reserved(index)
+  a = torch.cuda.memory_allocated(index)
+  
+  return r-a
+
+
 def save_checkpoint(state, filename="my_checkpoint.pth.tar"):
     print("=> Saving checkpoint")
     torch.save(state, filename)
